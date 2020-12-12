@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{super()}}{% endblock %}
+{% block styles %}
+{{super()}}
+{% endblock %}
+{% block navbar %}
+	{{super()}}
+{% endblock %}
+{% block content%}
+{{super()}}
+<div class="container-fluid text-center">    
+  <div class="row content">
+    <div class="col-sm-2 sidenav">
+    <div>
+    <h1> Total Cases {{currentData.Total}} </h1>
+    </div>
+    <div>	
+    <h1> Negative Cases {{currentData.Negative}} </h1>
+    </div>
+    <div>
+    <h1> Positive Cases {{currentData.Positive}} </h1>
+    </div>
+    
+    </div>
+    <div class="col-sm-8 text-left"> 
+	Map lol
+    </div>
+    <div class="col-sm-2 sidenav">
+	test right
+    </div>
+  </div>
+</div>  
+{% endblock %}
+{% block scripts %} 
+	{{super()}}	
+
+{% endblock %}

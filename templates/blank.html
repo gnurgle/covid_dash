@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{super()}}{% endblock %}
+{% block styles %}
+{{super()}}
+{% endblock %}
+{% block navbar %}
+	{{super()}}
+{% endblock %}
+{% block content%}
+{{super()}}
+<div class="container-fluid text-center">    
+  <div class="row content">
+    <div class="col-sm-2 sidenav">
+    test side
+    </div>
+    <div class="col-sm-8 text-left"> 
+	test mid
+    </div>
+    <div class="col-sm-2 sidenav">
+	test right
+    </div>
+  </div>
+</div>  
+{% endblock %}
+{% block scripts %} 
+	{{super()}}	
+
+{% endblock %}

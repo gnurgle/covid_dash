@@ -1,0 +1,27 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}OpenSource FL Covid-19 Dashboard{% endblock %}
+{% block styles %}
+{{super()}}
+	<link rel="stylesheet" href="/static/css/main-body.css">
+	<link rel="stylesheet" href="/static/css/navbar.css">
+{% endblock %}
+{% block navbar %}
+<nav class="navbar">
+	<div class ="container-fluid">
+	<a href="#home" class="active">Florida Cases</a>
+ 	<a href="#news">Florida Testing</a>
+ 	<a href="#breakdown">Cases Breakdown</a>
+ 	<a href="#zip">Cases By Zip</a>
+ 	<a href="#contact">Health Metrics</a>
+ 	<a href="#contact">Data Validation</a>
+ 	<a href="#contact">Sources</a>
+ 	</div>
+</nav>
+{% endblock %}
+{% block content%}
+	{{super()}}
+
+{% endblock %}
+{% block scripts %} 
+	{{super()}}	
+{% endblock %}
