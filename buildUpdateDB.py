@@ -1,25 +1,53 @@
-######################################################3
-#
-#	Naming Scheme is as follows
-#	ct - is related to covidtracking.com api
-#	flDOH - is related to Florida Department of Health api
-#	hhs - is related to healthdata.gov
-#	cdc - is related to cdc
-#
-#
-#
-#
-########################################################
 import sqlite3 as sql
 import requests
 import json
+import os
+from datetime import date
+
+def buildUpdateDB():
+
+	conn = sql.connect('covid_update.db')
+
+	conn.execute("CREATE TABLE Patients(ObjectID INT," \
+		+"County TEXT,"\
+		+"Age INT,"\
+		+"Age_group TEXT,"\
+		+"Gender TEXT,"\
+		+"Jurisdiction TEXT,"\
+		+"Travel_related TEXT,"\
+		+"Origin TEXT,"\
+		+"EDVisit TEXT,"\
+		+"Hospitalized TEXT,"\
+		+"Died TEXT,"\
+		+"CaseStatus TEXT,"\
+		+"Contact TEXT,"\
+		+"CaseDate INT,"\
+		+"EventDate INT,"\
+		+"ChartDate INT,"\
+		+"PRIMARY KEY (ObjectID))")
+
+	conn.execute("CREATE TABLE Zips(ZipCode TEXT,"\
+		+"County TEXT,"\
+		+"Places TEXT,"\
+		+"PlacesReport TEXT,"\
+		+"NumberCases,"\
+		+"PRIMARY KEY(ZipCode))")
+
+	conn.execute("CREATE TABLE Totals (DateEpoch INT,"\
+		+"Negative INT,"\
+		+"Positive INT,"\
+		+"Total INT,"\
+		+"PRIMARY KEY (DateEpoch))")
+
+	conn.close()
+	flDOHTotals()
 
 def flDOHTotals():
 
 	#Print message to console indicating start
 	print ("Fetching Daily Positive and Negative Tests")
 	#Connect to DB
-	conn = sql.connect('covid_data.db')
+	conn = sql.connect('covid_update.db')
 	cur = conn.cursor()
 	
 	#URL for DOH API of totals
@@ -53,7 +81,7 @@ def flDOHZips():
 	#Print message to console indicating start
 	print ("Fetching Cases By Zip Code")
 	#Connect to DB
-	conn = sql.connect('covid_data.db')
+	conn = sql.connect('covid_update.db')
 	cur = conn.cursor()
 	
 	#URL for DOH API of totals
@@ -94,7 +122,7 @@ def flDOHPatients():
 	print("Fetching All Patient information")
 
 	#Connect to DB
-	conn = sql.connect('covid_data.db')
+	conn = sql.connect('covid_update.db')
 	cur = conn.cursor()
 
 	#Set flag for determing if done running
@@ -159,8 +187,80 @@ def flDOHPatients():
 	print("Finished All Patient information")
 	
 	conn.close()
+	updateQuick()
+
+def updateQuick():
+
+	#Connect to updated database
+	conn = sql.connect('covid_update.db')
+	cur = conn.cursor()
+	
+	#Start series of slower queries to update quick access db for speed
+
+	#Get Total Positive People in State
+	cur.execute("SELECT COUNT(*) FROM Patients")
+	total = (cur.fetchall)[0][0]
+
+	#Get Total Positive Residents in State
+	cur.execute("SELECT COUNT(*) FROM Patients WHERE Jurisdiction = 'FL resident'")
+	res = (cur.fetchall)[0][0]
+
+	#Get Total Positive NonResidents in State
+	cur.execute("SELECT COUNT(*) FROM Patients WHERE Jurisdiction = 'Non-FL resident'")
+	non = (cur.fetchall)[0][0]
+
+	#Get Total Positive Residents not in State
+	cur.execute("SELECT COUNT(*) FROM Patients WHERE Jurisdiction = 'Not diagnosed/isolated in FL'")
+	oos = (cur.fetchall)[0][0]
+
+	#Get Total Positive Residents in State Hospitalized
+	cur.execute("SELECT COUNT(*) FROM Patients WHERE "\
+	+ "Jurisdiction != 'Non-FL resident' AND Hospitalized = 'YES'")
+	reshosp = (cur.fetchall)[0][0]
+
+	#Get Total Positive NonResidents in State Hospitalized
+	cur.execute("SELECT COUNT(*) FROM Patients WHERE "\
+	+ "Jurisdiction = 'Non-FL resident' AND Hospitalized = 'YES'")
+	nonhosp = (cur.fetchall)[0][0]
+
+	#Get Total	Residents in State Death
+	cur.execute("SELECT COUNT(*) FROM Patients WHERE "\
+	+ "Jurisdiction != 'Non-FL resident' AND Died = 'Yes'")
+	resdeath = (cur.fetchall)[0][0]
+
+	#Get Total NonResidents in State Death
+	cur.execute("SELECT COUNT(*) FROM Patients WHERE "\
+	+ "Jurisdiction = 'Non-FL resident' AND Died = 'Yes'")
+	nondeath = (cur.fetchall)[0][0]
+
+	conn.close()
+
+	#Open quick DB to write values
+	conn = sql.connect('quickAccess.db')
+	cur = conn.cursor()
+
+	cur.execute("INSERT OR REPLACE INTO Quick(Total,\
+	Resident,NonResident,ResHops,NonResHosp,ResDeath,NonResDeath) \
+	VALUES(?,?,?,?,?,?,?)",(total,res,non,oos,reshosp,nonhosp,resdeath,nondeath))
+
+	conn.commit()
+	conn.close()
+
+	#Go swap old db with new
+	replaceDatabase()
 
 
+def replaceDatabase():
 
+	#Archive old DB and replace with new
+	today = str(date.today())
+	#Retry until avaliable
+	while os.path.exists("covid_data.db"):
+		os.rename('covid_data.db',"covid_data"+today+".db")
+
+	#Rename new DB to old
+	os.rename('covid_update.db','covid_data.db')
+
+	
 if __name__ == "__main__":
-	flDOHTotals()
+	replaceDatabase()
