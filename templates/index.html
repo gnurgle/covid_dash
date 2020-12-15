@@ -2,6 +2,7 @@
 {% block title %}{{super()}}{% endblock %}
 {% block styles %}
 {{super()}}
+	<link rel="stylesheet" href="/static/css/cases.css">
 {% endblock %}
 {% block navbar %}
 	{{super()}}
@@ -9,29 +10,206 @@
 {% block content%}
 {{super()}}
 <div class="container-fluid text-center">    
+	<br><br>
   <div class="row content">
-    <div class="col-sm-2 sidenav">
-    <div>
-    <h1> Total Cases {{currentData.Total}} </h1>
+    <div class="col-sm-3 sidenav">
+	<table style="width:100%">
+	<tr>
+	<td colspan="2">
+	<p><br>These values are made up of positive results by PCR and Antigen for residents and non-residents</p></td>
+	</td>
+	</tr>
+    <tr>
+    <td colspan="2"><h1> Total Positive Cases: {{currentData.Total}} </h1>
+    </tr>
+    <tr>
+    <td><h2>Residents</h2></td>
+    <td><h3>Non-Residents</h3></td>
+    </tr>
+    <tr>	
+    <td><h2> Positive:</h2> <h1>{{currentData.Resident}} </h1>
+    <td><h2> Positive:</h2> <h1>{{currentData.NonResident}} </h1>
+	</tr>
+    <tr>	
+    <td><h3> Hospitalized:</h3><h1> {{currentData.ResHosp}} </h1>
+    <td><h3> Hospitalized:</h3><h1> {{currentData.NonResHosp}} </h1>
+	</tr>
+    <tr>	
+    <td><h2> Deaths:</h2><h1> {{currentData.ResDeath}} </h1>
+    <td><h2> Deaths:</h2><h1> {{currentData.NonResDeath}} </h1>
+	</tr>
+	<td colspan="2">
+	<p><br>The values for deaths can change due to delays. The values here are updated once per day and as such may be slightly behind the Department of Health Dashboard</p></td>
+	</td>
+	<tr>
+	</tr>
+	</table>
     </div>
-    <div>	
-    <h1> Negative Cases {{currentData.Negative}} </h1>
+    <div class="col-sm-5 text-left"> 
+	Map
     </div>
-    <div>
-    <h1> Positive Cases {{currentData.Positive}} </h1>
-    </div>
-    
-    </div>
-    <div class="col-sm-8 text-left"> 
-	Map lol
-    </div>
-    <div class="col-sm-2 sidenav">
-	test right
-    </div>
+    <div class="col-sm-4 sidenav">
+	<table style="width:100%">
+	<tr>
+	<td><p>Positive Tests for Florida Residents and Non-Residents tested in Florida over the last 30 Days</p></td>
+	</tr>
+	<tr>
+		<td class="canvas-container"><canvas id="respos30"></canvas></td>
+	</tr>
+	<tr>
+	<td><p>Deaths for Florida Residents and Non-Residents over the last 30 Days</p></td>
+	</tr>
+	<tr>
+		<td class="canvas-container"><canvas id="deaths30"></canvas></td>
+	</tr>
+	<tr>
+	<td><p>The Deaths by Day chart shows the total number of Florida residents with confirmed COVID-19 that died on each calendar day (12:00 AM - 11:59 PM). Death data often has significant delays in reporting, so data within the past two weeks will be updated frequently.</p></td>
+	</tr>
+	</table>
+	</div>
   </div>
 </div>  
 {% endblock %}
 {% block scripts %} 
 	{{super()}}	
+<script src="/static/js/Chart.bundle.min.js"></script>
+<script>
+new Chart(document.getElementById("respos30"), {
+    type: 'bar',
+    data: {
+      labels: {{res30[0]|tojson}},
+      datasets: [
+        {
+          label: "Positive Resident Tests",
+          backgroundColor: "#fdb827",
+          data: {{res30[1]|tojson}}
+        },
+        {
+          label: "Positive Non-Resident Tests",
+          backgroundColor: "#c02739",
+          data: {{res30[2]|tojson}}
+        }        
+      ]
+    },
+    options: {
+    	maintainAspectRatio:false,
+    	responsive: true,
+    	tooltips:{
+    		mode: 'label',
+    		callbacks: {
+        		footer: (tooltipItems, data) => {
+          		let total = tooltipItems.reduce((a, e) => a + parseInt(e.yLabel), 0);
+          		return 'Total Positive Tests: ' + total;
+        		}
+        	}
+    		},
+    	scales:{
+    		xAxes:[{
+    			ticks: {
+    				autoSkip: true,
+    				maxRotation:0,
+    				minRotation:0,
+    				maxTicksLimit:4,
+    				fontColor: 'white'
+    			
+    			},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(255, 189, 105, .2)"
+    			},
+    			stacked:true
+    			
+    		}],
+    		yAxes:[{
+    			ticks:{
+					beginAtZero:true,
+					fontColor: 'white'
+				},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(255, 189, 105, .2)"
+    			},
+    			stacked:true
 
+			}]
+    	},
+    	scaleFontColor:"#FFFFFF",
+      legend: { display: false },
+      title: {
+       	display: false,
+        text: 'Positive Tests over last 30 days'
+		}
+    }
+});
+</script>
+
+<script>
+new Chart(document.getElementById("deaths30"), {
+    type: 'bar',
+    data: {
+      labels: {{deaths30[0]|tojson}},
+      datasets: [
+        {
+          label: "Positive Resident Tests",
+          backgroundColor: "#d0e8f2",
+          data: {{deaths30[1]|tojson}}
+        },
+        {
+          label: "Positive Non-Resident Tests",
+          backgroundColor: "#456268",
+          data: {{deaths30[2]|tojson}}
+        }        
+      ]
+    },
+    options: {
+    	maintainAspectRatio:false,
+    	responsive: true,
+    	tooltips:{
+    		mode: 'label',
+    		callbacks: {
+        		footer: (tooltipItems, data) => {
+          		let total = tooltipItems.reduce((a, e) => a + parseInt(e.yLabel), 0);
+          		return 'Total Positive Tests: ' + total;
+        		}
+        	}
+    		},
+    	scales:{
+    		xAxes:[{
+    			ticks: {
+    				autoSkip: true,
+    				maxRotation:0,
+    				minRotation:0,
+    				maxTicksLimit:4,
+    				fontColor: 'white'
+    			
+    			},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(121, 163, 177, .3)"
+    			},
+    			stacked:true
+    			
+    		}],
+    		yAxes:[{
+    			ticks:{
+					beginAtZero:true,
+					fontColor: 'white'
+				},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(121, 163, 177, .3)"
+    			},
+    			stacked:true
+
+			}]
+    	},
+    	scaleFontColor:"#FFFFFF",
+      legend: { display: false },
+      title: {
+       	display: false,
+        text: 'Positive Tests over last 30 days'
+		}
+    }
+});
+</script>
 {% endblock %}

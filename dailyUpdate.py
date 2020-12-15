@@ -39,13 +39,12 @@ def checkforUpdates():
 	#Grab current highest patientID
 	cur.execute("SELECT MAX(ObjectID) FROM Patients")
 	newestPatient = (cur.fetchall())[0][0]
-	
 
 	#Build URL
 	url = "https://services1.arcgis.com/CY1LXxl9zlJeBuRZ/arcgis/"\
 	+ "rest/services/Florida_COVID19_Case_Line_Data_NEW/" \
 	+ "FeatureServer/0/query?where=1%3D1&outFields=*&orderByFields" \
-	+ "=ObjectID%20DESC&outSR=4326&f=json"
+	+ "=ObjectId%20DESC&outSR=4326&f=json"
 
 	#Fetch response and decode
 	response = requests.get(url)
@@ -54,8 +53,7 @@ def checkforUpdates():
 	#Grab latest entry object ID#
 	data = r['features']
 	output = data[0]['attributes']['ObjectId']
-	print (output)
-	print (newestPatient)
+
 	if output > newestPatient:
 		print("Updates Found, Building New DB")
 		buildUpdateDB()

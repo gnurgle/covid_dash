@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+{% block title %}{{super()}}{% endblock %}
+{% block styles %}
+{{super()}}
+{% endblock %}
+{% block navbar %}
+	{{super()}}
+	<link rel="stylesheet" href="/static/css/cases.css">
+{% endblock %}
+{% block content%}
+{{super()}}
+<div class="container-fluid text-center">    
+  <div class="row content">
+    <div class="col-sm-3 sidenav">
+		<table style="width:100%">
+		<tr>
+			<td><p>Resident Cases by Race</p></td>
+		</tr>
+   		<tr>
+		<td class="canvas-container"><canvas id="dayRace"></canvas></td>
+		</tr>
+		<tr>
+			<td><p>Resident Cases by Ethnicity</p></td>
+		</tr>
+   		<tr>
+		<td class="canvas-container"><canvas id="dayEthnicity"></canvas></td>
+		</tr>
+		</table>
+    </div>
+    <div class="col-sm-7 text-center"> 
+		<table style="width:100%">
+			<tr>
+			<td><p>Resident And Non-Resident Positive Cases by Age Group</p></td>
+			</tr>
+			<tr>
+			<td class="canvas-container"><canvas id="dayAge"></canvas></td>
+			</tr>
+		</table>
+    </div>
+    <div class="col-sm-2 sidenav">
+	right Partition
+    </div>
+  </div>
+</div>  
+{% endblock %}
+{% block scripts %} 
+	{{super()}}	
+<script src="/static/js/Chart.bundle.min.js"></script>
+<script>
+new Chart(document.getElementById("dayRace"), {
+    type: 'horizontalBar',
+    data: {
+      labels: ["White","Black","Other","Unknown"],
+      datasets: [
+        {
+          label: "{{dayData[0]}} New Positive Results",
+          backgroundColor: ["#f65155","#009ecb","#a5c646","#5c5c5c"],
+          data: [{{dayData[6]}},{{dayData[7]}},{{dayData[8]}},{{dayData[9]}}]
+        }
+      ]
+    },
+    options: {
+    	maintainAspectRatio:false,
+    	responsive: true,
+    	hover: {
+    		animationDuration: 0,
+		},
+    	animation: {
+        duration: 1,
+        onComplete: function () {
+            var chartInstance = this.chart,
+                ctx = chartInstance.ctx;
+            ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'bottom';
+
+            this.data.datasets.forEach(function (dataset, i) {
+                var meta = chartInstance.controller.getDatasetMeta(i);
+                meta.data.forEach(function (bar, index) {
+                    var data = dataset.data[index];                            
+                    ctx.fillText(data, bar._model.x -1, bar._model.y - 5);
+                });
+            });
+        }
+      },
+    	tooltips:{
+    		mode: 'label',
+
+    		},
+    	scales:{
+    		xAxes:[{
+    			ticks: {
+    				autoSkip: true,
+    				maxRotation:0,
+    				minRotation:0,
+    				maxTicksLimit:4,
+    				fontColor: 'white',
+    			},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(255, 189, 105, .2)"
+    			},
+    			stacked:true
+    			
+    		}],
+    		yAxes:[{
+    			ticks:{
+					beginAtZero:true,
+					fontColor: 'white',
+				},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(255, 189, 105, .2)"
+    			},
+    			stacked:true
+				
+			}]
+    	},
+    	scaleFontColor:"#FFFFFF",
+      legend: { display: false },
+      title: {
+       	display: false,
+        text: 'Cases by race'
+		}
+    }
+});
+</script>
+<script>
+new Chart(document.getElementById("dayEthnicity"), {
+    type: 'horizontalBar',
+    data: {
+      labels: ["Non-Hispanic","Hispanic","Unknown/No Data"],
+      datasets: [
+        {
+          label: "{{dayData[0]}} New Positive Results",
+          backgroundColor: ["#c39739","#5f7115","#00734e"],
+          data: [{{dayData[11]}},{{dayData[12]}},{{dayData[13]}},]
+        }
+      ]
+    },
+    options: {
+    	maintainAspectRatio:false,
+    	responsive: true,
+    	hover: {
+    		animationDuration: 0
+		},
+    	animation: {
+        duration: 1,
+        onComplete: function () {
+            var chartInstance = this.chart,
+                ctx = chartInstance.ctx;
+            ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'bottom';
+
+            this.data.datasets.forEach(function (dataset, i) {
+                var meta = chartInstance.controller.getDatasetMeta(i);
+                meta.data.forEach(function (bar, index) {
+                    var data = dataset.data[index];                            
+                    ctx.fillText(data, bar._model.x -1, bar._model.y - 5);
+                });
+            });
+        }
+      },
+    	tooltips:{
+    		mode: 'label',
+    		},
+    	scales:{
+    		xAxes:[{
+    			ticks: {
+    				autoSkip: true,
+    				maxRotation:0,
+    				minRotation:0,
+    				maxTicksLimit:4,
+    				fontColor: 'white'
+    			
+    			},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(255, 189, 105, .2)"
+    			},
+    			stacked:true
+    			
+    		}],
+    		yAxes:[{
+    			ticks:{
+					beginAtZero:true,
+					fontColor: 'white'
+				},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(255, 189, 105, .2)"
+    			},
+    			stacked:true
+
+			}]
+    	},
+    	scaleFontColor:"#FFFFFF",
+      legend: { display: false },
+      title: {
+       	display: false,
+        text: 'Cases by ethnicity'
+		}
+    }
+});
+</script>
+<script>
+new Chart(document.getElementById("dayAge"), {
+    type: 'bar',
+    data: {
+      labels: ["0-4","5-14","15-24","25-34","35-44","45-54","55-64","65-74","75-84","85+"],
+      datasets: [
+        {
+          label: "Positive Residents",
+          backgroundColor: ["#ffaa2e","#ffff3f","#a1ff3a","#21ff38","#00ffc7","#00c5fc","#0071fa","#cb0bfa","#ff08c2","#ff5521"],
+          data: [{{dayData[21]}},{{dayData[22]}},{{dayData[23]}},{{dayData[24]}},{{dayData[25]}},{{dayData[26]}},{{dayData[27]}},{{dayData[28]}},{{dayData[29]}},{{dayData[30]}}]
+        },
+        {
+          label: "Positive Non-Residents",
+		  backgroundColor: ["#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f"],
+          data: [{{dayData[31]}},{{dayData[32]}},{{dayData[33]}},{{dayData[34]}},{{dayData[35]}},{{dayData[36]}},{{dayData[37]}},{{dayData[38]}},{{dayData[39]}},{{dayData[40]}}]
+        }
+      ]
+    },
+    options: {
+    	maintainAspectRatio:false,
+    	responsive: true,
+    	tooltips:{
+    		mode: 'label',
+    		callbacks: {
+    			footer: (tooltipItems,data) => {
+    			let total = tooltipItems.reduce((a,e) => a + parseInt(e.yLabel), 0);
+    			return 'Total Positive Tests: ' + total;
+    			}
+    		}
+
+    		},
+    	scales:{
+    		xAxes:[{
+    			ticks: {
+    				autoSkip: true,
+    				maxRotation:0,
+    				minRotation:0,
+    				fontColor: 'white'
+    			
+    			},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(255, 189, 105, .2)"
+    			},
+    			stacked:true
+    			
+    		}],
+    		yAxes:[{
+    			ticks:{
+					beginAtZero:true,
+					fontColor: 'white'
+				},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(255, 189, 105, .2)"
+    			},
+    			stacked:true
+
+			}]
+    	},
+    	scaleFontColor:"#FFFFFF",
+      legend: { display: false },
+      title: {
+       	display: false,
+        text: 'Cases by ethnicity'
+		}
+    }
+});
+</script>
+{% endblock %}

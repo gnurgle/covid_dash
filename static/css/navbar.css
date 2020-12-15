@@ -1,6 +1,6 @@
 /* Place the navbar at the bottom of the page, and make it stick */
 .navbar {
-  background-color: #333;
+  background-color: #222;
   overflow: hidden;
   top: 0;
   width: 100%;
@@ -23,8 +23,3 @@
   color: black;
 }
 
-/* Add a color to the active/current link */
-.navbar a.active {
-  background-color: #555;
-  color: white;
-}
