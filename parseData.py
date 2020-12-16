@@ -85,7 +85,7 @@ def getPrevDay():
 	+ "C_RaceWhite, C_RaceBlack, C_RaceOther, C_RaceUnknown, "\
 	+ "C_HispanicYes, C_HispanicNo, C_HispanicUnk, C_EDYes_Res, "\
 	+ "C_EDYes_NonRes, C_HospYes_Res, C_HospYes_NonRes, "\
-	+ "T_negative, T_positive, T_NegRes, T_NegNotFLRes "\
+	+ "T_negative, T_positive, T_NegRes, T_NegNotFLRes,C_FLRes,C_NotFLRes "\
 	+ "FROM County WHERE County = 'State' "\
 	+ "GROUP BY DateStamp Order BY DateStamp DESC LIMIT 2")
 
@@ -119,24 +119,20 @@ def getPrevDay():
 	rows = cur.fetchall()
 
 	subtotal = 0
+	entry = 0
 	#Sum up each age chunk and add to output
-	for row in rows:
-		subtotal += row[1]
-		if row[0] % 10 == 4 and row[0]<85:
-			print (row[0])
+	for i in range(0,130):
+		if i == rows[entry][0]:
+			subtotal += rows[entry][1]
+			if entry < len(rows)-1:
+				entry += 1
+		if i % 10 == 4 and i<85:
 			output.append(subtotal)
 			subtotal = 0
 	#Add 85+ group
 	output.append(subtotal)
 
 	#Fetch Non-Resident Age Groups totals for the day
-	#Connect to Patient DB
-	conn = sql.connect("covid_data.db")
-	cur = conn.cursor()
-
-	#Get lastest date
-	cur.execute('SELECT MAX(ChartDate) FROM Patients')
-	timestamp = (cur.fetchall())[0][0]
 
 	#Grab ALL age Information
 	cur.execute('SELECT Age,COUNT(Age) FROM Patients WHERE CaseDate = ? \
@@ -145,18 +141,84 @@ def getPrevDay():
 	rows = cur.fetchall()
 
 	subtotal = 0
+	entry = 0
+
 	#Sum up each age chunk and add to output
-	for row in rows:
-		subtotal += row[1]
-		if row[0] % 10 == 4 and row[0]<85:
-			print (row[0])
+	for i in range(0,130):
+		if i == rows[entry][0]:
+			subtotal += rows[entry][1]
+			if entry < len(rows)-1:
+				entry += 1
+		if i % 10 == 4 and i<85:
 			output.append(subtotal)
 			subtotal = 0
 	#Add 85+ group
 	output.append(subtotal)
 
+	#The reason that the queries are split up vs running a group
+	#Is due to the potential for an Unknown or a specific gender to not
+	#be represented. 
 
-	
+	#Fetch Male Gender Positive Tests For Res
+	cur.execute('SELECT COUNT(*) FROM Patients WHERE CaseDate = ? \
+		 AND Jurisdiction != "Non-FL resident" AND Gender = "Male"',(timestamp,))
+	rows = cur.fetchall()
+	if not rows:
+		output.append(0)
+	else:
+		output.append(rows[0][0])
+
+	#Fetch Female Gender Positive Tests For Res
+	cur.execute('SELECT COUNT(*) FROM Patients WHERE CaseDate = ? \
+		 AND Jurisdiction != "Non-FL resident" AND Gender = "Female"',(timestamp,))
+	rows = cur.fetchall()
+	if not rows:
+		output.append(0)
+	else:
+		output.append(rows[0][0])
+
+	#Fetch Unknown Gender Positive Tests For Res
+	cur.execute('SELECT COUNT(*) FROM Patients WHERE CaseDate = ? \
+		 AND Jurisdiction != "Non-FL resident" AND Gender = "Unknown"',(timestamp,))
+	rows = cur.fetchall()
+	if not rows:
+		output.append(0)
+	else:
+		output.append(rows[0][0])
+
+	#Fetch Male Gender Positive Tests For NonRes
+	cur.execute('SELECT COUNT(*) FROM Patients WHERE CaseDate = ? \
+		 AND Jurisdiction = "Non-FL resident" AND Gender = "Male"',(timestamp,))
+	rows = cur.fetchall()
+	if not rows:
+		output.append(0)
+	else:
+		output.append(rows[0][0])
+
+	#Fetch Female Gender Positive Tests For NonRes
+	cur.execute('SELECT COUNT(*) FROM Patients WHERE CaseDate = ? \
+		 AND Jurisdiction = "Non-FL resident" AND Gender = "Female"',(timestamp,))
+	rows = cur.fetchall()
+	if not rows:
+		output.append(0)
+	else:
+		output.append(rows[0][0])
+
+	#Fetch Unknown Gender Positive Tests For NonRes
+	cur.execute('SELECT COUNT(*) FROM Patients WHERE CaseDate = ? \
+		 AND Jurisdiction = "Non-FL resident" AND Gender = "Unknown"',(timestamp,))
+	rows = cur.fetchall()
+	if not rows:
+		output.append(0)
+	else:
+		output.append(rows[0][0])
+
+	conn.close()
+
+	#Connect to Database
+	conn = sql.connect("County.db")
+	cur = conn.cursor()
+
 	#Return Results
 	return output
 

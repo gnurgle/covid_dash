@@ -14,31 +14,82 @@
     <div class="col-sm-3 sidenav">
 		<table style="width:100%">
 		<tr>
-			<td><p>Resident Cases by Race</p></td>
+			<td><p>Positive Resident Cases by Race for {{dayData[0]}}</p></td>
 		</tr>
    		<tr>
 		<td class="canvas-container"><canvas id="dayRace"></canvas></td>
 		</tr>
 		<tr>
-			<td><p>Resident Cases by Ethnicity</p></td>
+			<td><p>Positive Resident Cases by Ethnicity for {{dayData[0]}}</p></td>
 		</tr>
    		<tr>
 		<td class="canvas-container"><canvas id="dayEthnicity"></canvas></td>
+		</tr>
+		<tr>
+		<td><p><i>Click Here to find how these numbers are calculated, their accuracy, and how total amounts may vary from other results</p></td>
 		</tr>
 		</table>
     </div>
     <div class="col-sm-7 text-center"> 
 		<table style="width:100%">
 			<tr>
-			<td><p>Resident And Non-Resident Positive Cases by Age Group</p></td>
+			<td colspan="5"><p>Resident And Non-Resident Positive Cases by Age Group for {{dayData[0]}}</p></td>
 			</tr>
 			<tr>
-			<td class="canvas-container"><canvas id="dayAge"></canvas></td>
+			<td colspan="5"class="canvas-container"><canvas id="dayAge"></canvas></td>
 			</tr>
+			<tr>
+			<td colspan="2"><p>Resident And Non-Resident Positive Cases by Gender Group for {{dayData[0]}}</p></td>
+			<td><p>Resident Total New Positive and Negative Tests</p></td>
+			<td><p>Non-Resident Total New Positive and Negative Tests</p></td>
+			<td><p>County and Population</p></td>
+			</tr>
+			<tr>
+			<td rowspan="2" colspan=2" class="canvas-container"><canvas id="dayGender"></canvas></td>
+			<td><h2>Pos: {{dayData[21]}}</h2></td>
+			<td><h2>Neg: {{dayData[19]}}</h2></td>
+			<td><h2>State of Florida</h2></td>
+			</tr>
+			<tr>
+			<td><h2>Pos: {{dayData[22]}}</h2></td>
+			<td><h2>Neg: {{dayData[20]}}</h2></td>
+			<td><h2>Pop: 21.48 million</h2></td>
+			</tr>
+			
 		</table>
     </div>
     <div class="col-sm-2 sidenav">
-	right Partition
+		<table style="width:100%">
+		<tr>
+		<td><h4>|Select County.... \/|</h4></td>
+		</tr>
+		<tr>
+		<td><h2>{{dayData[0]}}</h2></td>
+		</tr>
+		<tr>
+			<td><h4>Positive Resident Cases Admitted to Hospital
+			<h2>{{dayData[13]}}</h2>
+			</h4>
+			</td>
+		<tr>
+		<tr>
+			<td><h4>Positive Non-Resident Cases Admitted to Hospital</h4>
+			<h2>{{dayData[14]}}</h2>
+			</td>
+		<tr>
+		<tr>
+			<td><h4>Positive Resident Cases Admitted to ER</h4>
+			<h2>{{dayData[15]}}</h2>
+			</td>
+		<tr>
+		<tr>
+			<td><h4>Positive Non-Resident Cases Admitted to ER</h4>
+			<h2>{{dayData[16]}}</h2>
+			</td>
+		<tr>
+		<td><p><i>Click Here for a link to the state report for county details</i></p></td>
+		</tr>
+		</table>
     </div>
   </div>
 </div>  
@@ -134,7 +185,7 @@ new Chart(document.getElementById("dayEthnicity"), {
         {
           label: "{{dayData[0]}} New Positive Results",
           backgroundColor: ["#c39739","#5f7115","#00734e"],
-          data: [{{dayData[11]}},{{dayData[12]}},{{dayData[13]}},]
+          data: [{{dayData[10]}},{{dayData[11]}},{{dayData[12]}},]
         }
       ]
     },
@@ -213,12 +264,12 @@ new Chart(document.getElementById("dayAge"), {
         {
           label: "Positive Residents",
           backgroundColor: ["#ffaa2e","#ffff3f","#a1ff3a","#21ff38","#00ffc7","#00c5fc","#0071fa","#cb0bfa","#ff08c2","#ff5521"],
-          data: [{{dayData[21]}},{{dayData[22]}},{{dayData[23]}},{{dayData[24]}},{{dayData[25]}},{{dayData[26]}},{{dayData[27]}},{{dayData[28]}},{{dayData[29]}},{{dayData[30]}}]
+          data: [{{dayData[23]}},{{dayData[24]}},{{dayData[25]}},{{dayData[26]}},{{dayData[27]}},{{dayData[28]}},{{dayData[29]}},{{dayData[30]}},{{dayData[31]}},{{dayData[32]}}]
         },
         {
           label: "Positive Non-Residents",
 		  backgroundColor: ["#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f"],
-          data: [{{dayData[31]}},{{dayData[32]}},{{dayData[33]}},{{dayData[34]}},{{dayData[35]}},{{dayData[36]}},{{dayData[37]}},{{dayData[38]}},{{dayData[39]}},{{dayData[40]}}]
+          data: [{{dayData[33]}},{{dayData[34]}},{{dayData[35]}},{{dayData[36]}},{{dayData[37]}},{{dayData[38]}},{{dayData[39]}},{{dayData[40]}},{{dayData[41]}},{{dayData[42]}}]
         }
       ]
     },
@@ -269,6 +320,75 @@ new Chart(document.getElementById("dayAge"), {
       title: {
        	display: false,
         text: 'Cases by ethnicity'
+		}
+    }
+});
+</script>
+<script>
+new Chart(document.getElementById("dayGender"), {
+    type: 'bar',
+    data: {
+      labels: ["Male","Female","Unknown"],
+      datasets: [
+        {
+          label: "Positive Residents",
+          backgroundColor: ["#6ec0ff", "#eb88ae", "#f2a941"],
+		  data: [{{dayData[43]}},{{dayData[44]}},{{dayData[45]}}]
+        },
+        {
+          label: "Positive Non-Residents",
+		  backgroundColor: ["#00599e", "#ad3160", "#a35b0d","#ba1a0f"],
+		  data: [{{dayData[46]}},{{dayData[47]}},{{dayData[48]}}]
+        }
+      ]
+    },
+    options: {
+    	maintainAspectRatio:false,
+    	responsive: true,
+    	tooltips:{
+    		mode: 'label',
+    		callbacks: {
+    			footer: (tooltipItems,data) => {
+    			let total = tooltipItems.reduce((a,e) => a + parseInt(e.yLabel), 0);
+    			return 'Total Positive Tests: ' + total;
+    			}
+    		}
+
+    		},
+    	scales:{
+    		xAxes:[{
+    			ticks: {
+    				autoSkip: true,
+    				maxRotation:0,
+    				minRotation:0,
+    				fontColor: 'white'
+    			
+    			},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(255, 189, 105, .2)"
+    			},
+    			stacked:true
+    			
+    		}],
+    		yAxes:[{
+    			ticks:{
+					beginAtZero:true,
+					fontColor: 'white'
+				},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(255, 189, 105, .2)"
+    			},
+    			stacked:true
+
+			}]
+    	},
+    	scaleFontColor:"#FFFFFF",
+      legend: { display: false },
+      title: {
+       	display: false,
+        text: 'Cases by gender'
 		}
     }
 });
