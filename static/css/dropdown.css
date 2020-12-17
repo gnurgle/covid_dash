@@ -1,0 +1,25 @@
+.dropdown-menu{
+	max-height:500px;
+	overflow:scroll;
+	color:white !important;
+	background-color:#222;
+	font-size:24px;
+	list-style-type:none;
+	}
+
+li{
+	list-style-type:none;
+	background-color:#222;
+	font-size: 18px;
+	color:white !important;
+	text-align:center;
+	}
+
+.drip{
+	list-style-type:none;
+	background-color:#eee;
+	font-size: 18px;
+	color:white !important;
+	text-align:center;
+	}
+
