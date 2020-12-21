@@ -3,6 +3,7 @@
 {% block styles %}
 {{super()}}
 	<link rel="stylesheet" href="/static/css/cases.css">
+	<link rel="stylesheet" href="/static/css/map.css">
 {% endblock %}
 {% block navbar %}
 	{{super()}}
@@ -45,9 +46,12 @@
 	</tr>
 	</table>
     </div>
-    <div class="col-sm-5 text-left"> 
-	Map
-    </div>
+    <div class="col-sm-5 text-center"> 
+	<h3>COVID-19 Cases in Florida</h3>
+		<div class="map-container">
+		<iframe class="map-display" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" title="COVID19 Rates Map" src="//www.arcgis.com/apps/Embed/index.html?webmap=5bf6f512855646ca8e53d587dfa39b88&extent=-85.9257,22.7379,-81.6989,32.8335&zoom=false&previewImage=false&scale=false&disable_scroll=false&theme=dark"></iframe>
+		</div>
+    </div> 
     <div class="col-sm-4 sidenav">
 	<table style="width:100%">
 	<tr>

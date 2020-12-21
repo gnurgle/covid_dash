@@ -2,7 +2,8 @@ import sqlite3 as sql
 import requests
 from parseData import getPos30, getDeaths30, getPrevDay,getPrevDayCounty
 from parseData import getPrevRangeCounty, getPrevRangeState
-from parseData import getAllState, getAllCounty
+from parseData import getAllState, getAllCounty, getAllVacCounty, getAllVac
+from parseData import getOrderVac
 from flask import Flask, render_template, request, redirect, url_for, jsonify, make_response
 from flask_bootstrap import Bootstrap
 
@@ -124,5 +125,24 @@ def allCounty(county):
 	return render_template('allCounty.html', currentData=currentData, \
 		dayData=dayData)
 
+#Vaccine Page
+@app.route('/vaccine')
+def vaccine():
+
+	#Fetch information
+	breakdown = getAllVac()
+	vacCounty = getAllVacCounty()
+	orderVac = getOrderVac()
+	
+	return render_template('vaccine.html', breakdown=breakdown[0], \
+		vacCounty=vacCounty, orderVac=orderVac)
+
+#FAQ Page
+@app.route('/faqs')
+def faq():
+
+	return render_template('faq.html')
+
 if __name__=="__main__":
 	app.run(debug = True)
+

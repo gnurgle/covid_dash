@@ -1137,6 +1137,62 @@ def getAllState():
 	#Return Results
 	return output
 
+#Get all county vaccine results
+def getAllVacCounty():
+
+	#Connect to Database
+	conn = sql.connect("vaccine_db.db")
+	cur = conn.cursor()
+
+	#Pull last 30 days of resident results
+	cur.execute("SELECT * FROM CountyVac")
+
+	rows = cur.fetchall()
+	conn.close()
+
+	return rows
+
+#Get all breakdown vaccine results
+def getAllVac():
+
+	#Connect to Database
+	conn = sql.connect("vaccine_db.db")
+	cur = conn.cursor()
+
+	#Pull last 30 days of resident results
+	cur.execute("SELECT * FROM Breakdown")
+
+	rows = cur.fetchall()
+	conn.close()
+	
+	return rows
+
+#Get order of Counties by percent
+def getOrderVac():
+
+	#Connect to Database
+	conn = sql.connect("vaccine_db.db")
+	cur = conn.cursor()
+
+	#Pull last 30 days of resident results
+	cur.execute("SELECT County, Percent FROM CountyVac ORDER BY Percent DESC")
+
+	rows = cur.fetchall()
+	conn.close()
+
+	#Change results of rows to fit chart
+	output = list(zip(*rows))
+
+	#Convert string to float for graph
+
+	nums = output[1]
+	replaceList = []
+	for num in nums:
+		replaceList.append(float(num))
+
+	output.append(replaceList)
+	
+	return output
 
 if __name__ == "__main__":
 	getPrevDay()

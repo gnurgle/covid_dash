@@ -1,0 +1,369 @@
+{% extends "base.html" %}
+{% block title %}{{super()}}{% endblock %}
+{% block styles %}
+{{super()}}
+{% endblock %}
+{% block navbar %}
+	{{super()}}
+	<link rel="stylesheet" href="/static/css/cases.css">
+	<link rel="stylesheet" href="/static/css/table.css">
+{% endblock %}
+{% block content%}
+{{super()}}
+<div class="container-fluid text-center">    
+  <div class="row content">
+    <div class="col-sm-3 sidenav">
+		<table style="width:100%">
+		<tr>
+			<td><p>Vaccinations By Race</p></td>
+		</tr>
+   		<tr>
+		<td class="canvas-container"><canvas id="vacRace"></canvas></td>
+		</tr>
+		<tr>
+			<td><p>Vaccinations By Gender</p></td>
+		</tr>
+   		<tr>
+		<td class="canvas-container"><canvas id="vacGender"></canvas></td>
+		</tr>
+		<tr>
+		<td><p><i>Click Here to find how these numbers are calculated, their accuracy, and how total amounts may vary from other results</p></td>
+		</tr>
+		</table>
+    </div>
+    <div class="col-sm-7 text-center"> 
+		<table style="width:100%">
+			<tr>
+			<td colspan="3"><p>Vaccinations by Age Group</p></td>
+			</tr>
+			<tr>
+			<td rowspan= "4"colspan="2" class="canvas-container"><canvas id="vacAge"></canvas></td>
+			<td><h3> Total Initial Vaccinations </h3></td>
+			</tr>
+			<tr><td><h2>{{breakdown[33]}}</h2></tr></td>
+			<tr><td><h3>Total Complete Sets</h3></tr></td>
+			<tr><td><h2>{{breakdown[34]}}</h2></tr></td>
+			<tr>
+			<td colspan="3"><p>Ranking of Percent of Population that has Received Vaccine</p></td>
+			</tr>
+			<tr>
+			</tr>
+			<tr>
+			<td colspan="3" class="canvas-container"><canvas id="vacPerc"></canvas></td>
+			<tr>
+		<tr>
+		<td colspan="3"><p><i>Click Here for a link to the Florida Department of Health website where a daily copy of these results can be viewed</p></td>
+		</tr>
+		</table>
+    </div>
+    <div class="col-sm-2 sidenav">
+		<p>Previous Day Vaccines by County</p>
+		<table style="width:100%" class="fixed_header">
+		<thead>
+		<tr>
+		<td><p>County</p></td>
+		<td><p>First Dose</p></td>
+		<td><p>Completed</p></td>
+		<td><p>Total</p></td>
+		</tr>
+		</thead>
+		{% for county in vacCounty %}
+		<tr>
+		<td><p>{{county[0]}}</p></td>
+		<td><p>{{county[1]}}</p></td>
+		<td><p>{{county[2]}}</p></td>
+		<td><p>{{county[3]}}</p></td>
+		</tr>
+		{% endfor %}
+		</table>
+		<p>Total Vaccines by County</p>
+		<table style="width:100%" class="fixed_header">
+		<thead>
+		<tr>
+		<td><p>County</p></td>
+		<td><p>First Dose</p></td>
+		<td><p>Completed</p></td>
+		<td><p>Total</p></td>
+		</tr>
+		</thead>
+		{% for county in vacCounty %}
+		<tr>
+		<td><p>{{county[0]}}</p></td>
+		<td><p>{{county[4]}}</p></td>
+		<td><p>{{county[5]}}</p></td>
+		<td><p>{{county[6]}}</p></td>
+		</tr>
+		{% endfor %}
+		</table>
+    </div>
+  </div>
+</div>  
+{% endblock %}
+{% block scripts %} 
+	{{super()}}	
+<script src="/static/js/Chart.bundle.min.js"></script>
+<script>
+new Chart(document.getElementById("vacRace"), {
+    type: 'horizontalBar',
+    data: {
+      labels: [['American Indian','Alaskan'],"Black","White","Other","Unknown"],
+      datasets: [
+        {
+          label: "First Vaccinations",
+          backgroundColor: ["#00ffc7","#f65155","#009ecb","#a5c646","#5c5c5c"],
+          minBarLength: 8,
+          data: [{{breakdown[1]}},{{breakdown[3]}},{{breakdown[5]}},{{breakdown[7]}}, {{breakdown[9]}}]
+        },
+        {
+          label: "Completed Series",
+		  backgroundColor: ["#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f"],
+          data: [{{breakdown[2]}},{{breakdown[4]}},{{breakdown[6]}},{{breakdown[8]}}, {{breakdown[10]}}]
+        }
+      ]
+    },
+    options: {
+    	maintainAspectRatio:false,
+    	responsive: true,
+    	hover: {
+    		animationDuration: 0,
+		},
+    	animation: {
+        duration: 1,
+      },
+          	tooltips:{
+    		mode: 'label',
+    		},
+	
+    	scales:{
+    		xAxes:[{
+    			ticks: {
+    				autoSkip: true,
+    				maxTicksLimit:4,
+    				fontColor: 'white',
+    			},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(255, 189, 105, .2)"
+    			},
+    			stacked:true
+    			
+    		}],
+    		yAxes:[{
+    			ticks:{
+					beginAtZero:true,
+					fontColor: 'white',
+				},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(255, 189, 105, .2)"
+    			},
+    			stacked:true
+				
+			}]
+    	},
+    	scaleFontColor:"#FFFFFF",
+      legend: { display: false },
+      title: {
+       	display: false,
+        text: 'Cases by race'
+		}
+    }
+});
+</script>
+<script>
+new Chart(document.getElementById("vacAge"), {
+    type: 'bar',
+    data: {
+      labels: ["15-24","25-34","35-44","45-54","55-64","65-74","75-84","85+"],
+      datasets: [
+        {
+          label: "First Vaccinations",
+          backgroundColor: ["#a1ff3a","#21ff38","#00ffc7","#00c5fc","#0071fa","#cb0bfa","#ff08c2","#ff5521","#5c5c5c"],
+          data: [{{breakdown[11]}},{{breakdown[13]}},{{breakdown[15]}},{{breakdown[17]}},{{breakdown[19]}},{{breakdown[21]}},{{breakdown[23]}},{{breakdown[25]}}]
+        },
+        {
+          label: "Completed Series",
+		  backgroundColor: ["#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f","#ba1a0f"],
+          data: [{{breakdown[12]}},{{breakdown[14]}},{{breakdown[16]}},{{breakdown[18]}},{{breakdown[20]}},{{breakdown[22]}},{{breakdown[24]}},{{breakdown[26]}},{{breakdown[28]}}]
+        }
+      ]
+    },
+    options: {
+    	maintainAspectRatio:false,
+    	responsive: true,
+    	tooltips:{
+    		mode: 'label',
+
+    		},
+    	scales:{
+    		xAxes:[{
+    			ticks: {
+    				autoSkip: true,
+    				maxRotation:0,
+    				minRotation:0,
+    				fontColor: 'white'
+    			
+    			},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(255, 189, 105, .2)"
+    			},
+    			stacked:true
+    			
+    		}],
+    		yAxes:[{
+    			ticks:{
+					beginAtZero:true,
+					fontColor: 'white',
+				},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(255, 189, 105, .2)"
+    			},
+    			stacked:true
+
+			}]
+    	},
+    	scaleFontColor:"#FFFFFF",
+      legend: { display: false },
+      title: {
+       	display: false,
+        text: 'Cases by ethnicity'
+		}
+    }
+});
+</script>
+<script>
+new Chart(document.getElementById("vacGender"), {
+    type: 'horizontalBar',
+    data: {
+      labels: ["Male","Female","Unknown"],
+      datasets: [
+        {
+          label: "First Vaccinations",
+          backgroundColor: ["#6ec0ff", "#eb88ae", "#f2a941"],
+          minBarLength: 8,
+		  data: [{{breakdown[31]}},{{breakdown[33]}},{{breakdown[35]}}]
+        },
+        {
+          label: "Completed Series",
+		  backgroundColor: ["#00599e", "#ad3160", "#a35b0d","#ba1a0f"],
+		  data: [{{breakdown[32]}},{{breakdown[34]}},{{breakdown[46]}}]
+        }
+      ]
+    },
+    options: {
+    	maintainAspectRatio:false,
+    	responsive: true,
+    	hover: {
+    		animationDuration: 0,
+		},
+    	animation: {
+        duration: 1,
+      },
+          	tooltips:{
+    		mode: 'label',
+    		},
+	
+    	scales:{
+    		xAxes:[{
+    			ticks: {
+    				autoSkip: true,
+    				maxTicksLimit:4,
+    				fontColor: 'white',
+    			},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(255, 189, 105, .2)"
+    			},
+    			stacked:true
+    			
+    		}],
+    		yAxes:[{
+    			ticks:{
+					beginAtZero:true,
+					fontColor: 'white',
+				},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(255, 189, 105, .2)"
+    			},
+    			stacked:true
+				
+			}]
+    	},
+    	scaleFontColor:"#FFFFFF",
+      legend: { display: false },
+      title: {
+       	display: false,
+        text: 'Cases by race'
+		}
+    }
+});
+</script>
+<script>
+new Chart(document.getElementById("vacPerc"), {
+    type: 'bar',
+    data: {
+      labels: {{orderVac[0]|tojson}},
+      datasets: [
+        {
+          label: "Percent of County population vaccinated",
+          backgroundColor: "#f2a941",
+          minBarLength: 1,
+          data: {{orderVac[2]|tojson}}
+        }
+      ]
+    },
+    options: {
+    	maintainAspectRatio:false,
+    	responsive: true,
+    	hover: {
+    		animationDuration: 0,
+		},
+    	animation: {
+        duration: 1,
+      },
+          	tooltips:{
+    		mode: 'label',
+    		},
+	
+    	scales:{
+    		xAxes:[{
+    			ticks: {
+    				autoSkip: true,
+					minRotation: 90,
+    				fontColor: 'white',
+    			},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(255, 189, 105, .2)"
+    			},
+    			stacked:true
+    			
+    		}],
+    		yAxes:[{
+    			ticks:{
+					beginAtZero:true,
+					fontColor: 'white',
+				},
+    			gridLines: {
+    				display: true,
+    				color: "rgba(255, 189, 105, .2)"
+    			},
+    			stacked:true
+				
+			}]
+    	},
+    	scaleFontColor:"#FFFFFF",
+      legend: { display: false },
+      title: {
+       	display: false,
+        text: 'Counties by percentage'
+		}
+    }
+});
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}{{super()}}{% endblock %}
+{% block styles %}
+{{super()}}
+{% endblock %}
+{% block navbar %}
+	{{super()}}
+{% endblock %}
+{% block content%}
+{{super()}}
+<div class="container-fluid text-center">    
+  <div class="row content">
+    <div class="col-sm-2 sidenav">
+    </div>
+    <div class="col-sm-8 text-center"> 
+
+<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'> 
+<h1  class='h1 text-center' id='faq-top'> FAQ Answers</h1> 
+<h2> FAQ Question Links</h2> 
+<p><a href='#where-does the information come from what are your sources?'>Where does the information come from? What are your sources?</a><br> 
+<a href='#how-are the numbers in the breakdowns calculated'>How are the numbers in the breakdowns calculated?</a><br> 
+<a href='#why-are the numbers in the breakdown different from other results'>Why are the numbers in the breakdown different from other results?</a><br> 
+<a href='#why-are there negative numbers on the breakdown'>Why are there negative numbers on the breakdown?</a><br> 
+<a href='#how-is the age group calculated in the breakdown'>How is the Age Group calculated in the breakdown?</a><br> 
+<a href='#how-is the percent calculated in the vaccines'>How is the percent calculated in the vaccines?</a><br> 
+<a href='#why-do the numbers on this dashboards differ from other dashboards'>Why do the numbers on this dashboards differ from other dashboards?</a><br> 
+<a href='#why-is (insert information) not included'>Why is (insert information) not included?</a><br> 
+<a href='#where-can i find the source code'>Where can I find the source code?</a><br> 
+<a href='#what-are some other places i can find information on covid in florida'>What are some other places I can find information on COVID in Florida?</a><br> 
+</p> 
+ <h2> Questions and Answers</h2><h2><a id='where-does the information come from what are your sources?'>Where does the information come from? What are your sources?</a></h2> 
+<p>All information comes directly from the Florida Department of Health's databases here: https://open-fdoh.hub.arcgis.com/search?q=covid19
+<br>The information for the vaccines come from their daily report here: http://ww11.doh.state.fl.us/comm/_partners/covid19_report_archive/vaccine/vaccine_report_latest.pdf
+<br>The map on the front page is an embedded version of the one from the FL DOH COVID Dashboard here: https://experience.arcgis.com/experience/96dd742462124fa0b38ddedb9b25e429</p> 
+<p><button type='button' class='btn btn-info btn-sm'><a href='#faq-top'>Top of FAQ</a></button> 
+<button type='button' class='btn btn-success btn-sm'><a href='https://opencoviddash.herokuapp.com/'>Homepage</a></button></p> 
+<h2><a id='how-are the numbers in the breakdowns calculated'>How are the numbers in the breakdowns calculated?</a></h2> 
+<p>The numbers are reached by subtracting the previous day with the latest number. If the range is for 7 days then that number is used instead. The information is kept as a total and is overwritten each day on the FL DOH side, so this dashboard keeps a local copy along with a datastamp.</p> 
+<p><button type='button' class='btn btn-info btn-sm'><a href='#faq-top'>Top of FAQ</a></button> 
+<button type='button' class='btn btn-success btn-sm'><a href='https://opencoviddash.herokuapp.com/'>Homepage</a></button></p> 
+<h2><a id='why-are the numbers in the breakdown different from other results'>Why are the numbers in the breakdown different from other results?</a></h2> 
+<p>By using the subtraction method, a fairly accurate number can be achieved. This number will never be 100% accurate as data is updated after the day it is posted. Thus only the difference between what was reported at two different dates can be presented since the original data is overwritten by the DOH on update.</p> 
+<p><button type='button' class='btn btn-info btn-sm'><a href='#faq-top'>Top of FAQ</a></button> 
+<button type='button' class='btn btn-success btn-sm'><a href='https://opencoviddash.herokuapp.com/'>Homepage</a></button></p> 
+<h2><a id='why-are there negative numbers on the breakdown'>Why are there negative numbers on the breakdown?</a></h2> 
+<p>The negative numbers are a prime example of when some information has been updated. Some commonplaces are data related to non-residents and data that is listed as unknown. When more information is recieved, these are updated so the total number will change from one day to another, possibly going down. This is a limitation of the subtraction method used and the was that the FL DOH presents the information. </p> 
+<p><button type='button' class='btn btn-info btn-sm'><a href='#faq-top'>Top of FAQ</a></button> 
+<button type='button' class='btn btn-success btn-sm'><a href='https://opencoviddash.herokuapp.com/'>Homepage</a></button></p> 
+<h2><a id='how-is the age group calculated in the breakdown'>How is the Age Group calculated in the breakdown?</a></h2> 
+<p>Instead of using the subtraction method, this counts the number of positive patients directly since that information is available in a much more detailed format. These numbers should represent 100% accuracy with what the FL DOH has on record as they are simply an aggregate query of the patient database.</p> 
+<p><button type='button' class='btn btn-info btn-sm'><a href='#faq-top'>Top of FAQ</a></button> 
+<button type='button' class='btn btn-success btn-sm'><a href='https://opencoviddash.herokuapp.com/'>Homepage</a></button></p> 
+<h2><a id='how-is the percent calculated in the vaccines'>How is the percent calculated in the vaccines?</a></h2> 
+<p>The population of the county divided by the total amount of vaccines in the county times 100 gives the percentage. The exceptions are Unknown and Out of State which will always show 0.</p> 
+<p><button type='button' class='btn btn-info btn-sm'><a href='#faq-top'>Top of FAQ</a></button> 
+<button type='button' class='btn btn-success btn-sm'><a href='https://opencoviddash.herokuapp.com/'>Homepage</a></button></p> 
+<h2><a id='why-do the numbers on this dashboards differ from other dashboards'>Why do the numbers on this dashboards differ from other dashboards?</a></h2> 
+<p>Other dashboards might add or subtract certain things like antibody counts or non-residents. The purpose of this dashboard is to be 100% transparent in how any calculations are done and to do as little changing of the data as possible. The only agenda is providing an open-sourced, non-biased dashboard that presents as much of the information as possible.</p> 
+<p><button type='button' class='btn btn-info btn-sm'><a href='#faq-top'>Top of FAQ</a></button> 
+<button type='button' class='btn btn-success btn-sm'><a href='https://opencoviddash.herokuapp.com/'>Homepage</a></button></p> 
+<h2><a id='why-is (insert information) not included'>Why is (insert information) not included?</a></h2> 
+<p>Some of the information may be out of date or slow to update (antibody testing, Long-term care facilities), have good summaries readily available (school report), something that I don't have enough data for yet (30-day county breakdown), or was something simply not included (more thorough look at testing).</p> 
+<p><button type='button' class='btn btn-info btn-sm'><a href='#faq-top'>Top of FAQ</a></button> 
+<button type='button' class='btn btn-success btn-sm'><a href='https://opencoviddash.herokuapp.com/'>Homepage</a></button></p> 
+<h2><a id='where-can i find the source code'>Where can I find the source code?</a></h2> 
+<p>It should be avaliable here: https://github.com/gnurgle/covid_dash
+<br>There are instruction on how to set it up and run it on your local system. 
+<br>It's important that not only the information, but the tools to analyze it is available to everyone. No one should be profiting off of simply displaying public information, let alone information related to a world health pandemic.</p> 
+<p><button type='button' class='btn btn-info btn-sm'><a href='#faq-top'>Top of FAQ</a></button> 
+<button type='button' class='btn btn-success btn-sm'><a href='https://opencoviddash.herokuapp.com/'>Homepage</a></button></p> 
+<h2><a id='what-are some other places i can find information on covid in florida'>What are some other places I can find information on COVID in Florida?</a></h2> 
+<p>This list will change as I receive permission from people to add their websites:
+<br>Florida Department of Health: https://floridahealthcovid19.gov/
+<br>Florida Division of Emergency Management: https://www.floridadisaster.org/covid19/
+</p> 
+<p><button type='button' class='btn btn-info btn-sm'><a href='#faq-top'>Top of FAQ</a></button> 
+<button type='button' class='btn btn-success btn-sm'><a href='https://opencoviddash.herokuapp.com/'>Homepage</a></button></p> 
+<br> 
+</div></div>
+
+    </div>
+    <div class="col-sm-2 sidenav">
+    </div>
+  </div>
+</div>  
+{% endblock %}
+{% block scripts %} 
+	{{super()}}	
+
+{% endblock %}
