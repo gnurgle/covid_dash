@@ -49,12 +49,22 @@
 			<td rowspan="2" colspan=2" class="canvas-container"><canvas id="dayGender"></canvas></td>
 			<td><h2>Pos: {{dayData[21]}}</h2></td>
 			<td><h2>Pos: {{dayData[22]}}</h2></td>
+			{% if dayData[49] == 'State'%}
 			<td><h2>State of Florida</h2></td>
 			</tr>
 			<tr>
 			<td><h2>Neg: {{dayData[19]}}</h2></td>
 			<td><h2>Neg: {{dayData[20]}}</h2></td>
 			<td><h2>Pop: 21.48 million</h2></td>
+			{% else %}
+			<td><h2>{{dayData[49]}} County</h2></td>
+			</tr>
+			<tr>
+			<td><h2>Neg: {{dayData[19]}}</h2></td>
+			<td><h2>Neg: {{dayData[20]}}</h2></td>
+			<td><h2>Pop: {{dayData[50]}}</h2></td>
+			{% endif %}
+
 			</tr>
 			
 		</table>
