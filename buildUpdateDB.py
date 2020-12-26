@@ -4,6 +4,7 @@ import json
 import os
 from datetime import date,time
 import calendar
+from fetchVaccine import fetchVaccine
 
 def buildUpdateDB():
 
@@ -263,6 +264,7 @@ def replaceDatabase():
 
 	#Rename new DB to old
 	os.rename('covid_update.db','covid_data.db')
+	updateCounty()
 
 def updateCounty():
 
@@ -325,5 +327,10 @@ def updateCounty():
 		conn.commit()
 
 	conn.close()
+
+	print("Building Vaccine DB")
+	fetchVaccine()
+
+	
 if __name__ == "__main__":
 	updateCounty()
